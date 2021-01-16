@@ -88,14 +88,12 @@ function love.update(dt)
     -- coins logic (if coin exists)
     for i in pairs(coins) do
         local coin = coins[i]
-        if coin ~= nil then
-            if calculateDistance(player, coin) < coin.size + player.size then
-                -- destroy coin, remove from list
-                coins[i] = nil
+        if calculateDistance(player, coin) < coin.size + player.size then
+            -- destroy coin, remove from list
+            table.remove(coins, i)
 
-                -- grow from eating a coin
-                player.size = player.size + coin.size
-            end
+            -- grow from eating a coin
+            player.size = player.size + coin.size
         end
     end
 end
@@ -107,8 +105,6 @@ function love.draw()
     -- draw coins if it exists
     for i in pairs(coins) do
         local coin = coins[i]
-        if coin ~= nil then
-            coin.draw(coin)
-        end
+        coin.draw(coin)
     end
 end
