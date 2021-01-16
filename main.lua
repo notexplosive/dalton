@@ -15,6 +15,21 @@ function love.load()
             x = 500,
             y = 300,
             size = 5
+        },
+        {
+            x = 500,
+            y = 300,
+            size = 5
+        },
+        {
+            x = 100,
+            y = 200,
+            size = 5
+        },
+        {
+            x = 300,
+            y = 600,
+            size = 5
         }
     }
 end
