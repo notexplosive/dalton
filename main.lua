@@ -1,5 +1,5 @@
 local player
-local coin
+local coins
 
 function love.load()
     player = {
@@ -10,10 +10,12 @@ function love.load()
         size = 10
     }
 
-    coin = {
-        x = 500,
-        y = 300,
-        size = 5
+    coins = {
+        {
+            x = 500,
+            y = 300,
+            size = 5
+        }
     }
 end
 
@@ -42,16 +44,22 @@ function love.update(dt)
     player.x = player.x + player.velocity.x * player.speed * dt
     player.y = player.y + player.velocity.y * player.speed * dt
 
-    -- coin logic (if coin exists)
-    if coin ~= nil then
-        -- calculate distance from player to coin
-        local diffx, diffy = coin.x - player.x, coin.y - player.y
-        local distanceSquared = diffx * diffx + diffy * diffy
-        local distance = math.sqrt(distanceSquared)
+    -- coins logic (if coin exists)
+    for i in pairs(coins) do
+        local coin = coins[i]
+        if coin ~= nil then
+            -- calculate distance from player to coin
+            local diffx, diffy = coin.x - player.x, coin.y - player.y
+            local distanceSquared = diffx * diffx + diffy * diffy
+            local distance = math.sqrt(distanceSquared)
 
-        if distance < coin.size + player.size then
-            -- destroy coin
-            coin = nil
+            if distance < coin.size + player.size then
+                -- destroy coin, remove from list
+                coins[i] = nil
+
+                -- grow from eating a coin
+                player.size = player.size + coin.size
+            end
         end
     end
 end
@@ -61,9 +69,12 @@ function love.draw()
     love.graphics.setColor(1, 1, 1)
     love.graphics.circle("fill", player.x, player.y, player.size)
 
-    -- draw coin if it exists
-    if coin ~= nil then
-        love.graphics.setColor(1, 1, 0.5)
-        love.graphics.circle("fill", coin.x, coin.y, coin.size)
+    -- draw coins if it exists
+    for i in pairs(coins) do
+        local coin = coins[i]
+        if coin ~= nil then
+            love.graphics.setColor(1, 1, 0.5)
+            love.graphics.circle("fill", coin.x, coin.y, coin.size)
+        end
     end
 end
