@@ -1,6 +1,4 @@
 local actors
-local enemies
-local player
 
 function calculateDistance(pointA, pointB)
     local diffx, diffy = pointA.x - pointB.x, pointA.y - pointB.y
@@ -24,6 +22,7 @@ function drawEnemy(actor)
 end
 
 function updateCoin(actor, i, dt)
+    local player = getFirstActorWithTag("player")
     if calculateDistance(player, actor) < actor.size + player.size then
         -- destroy actor, remove from list
         table.remove(actors, i)
@@ -34,6 +33,7 @@ function updateCoin(actor, i, dt)
 end
 
 function updateEnemy(actor, i, dt)
+    local player = getFirstActorWithTag("player")
     if calculateDistance(player, actor) < actor.size + player.size then
         -- destroy actor, remove from list
         table.remove(actors, i)
@@ -43,7 +43,7 @@ function updateEnemy(actor, i, dt)
     end
 end
 
-function updatePlayer(player, dt)
+function updatePlayer(player, i, dt)
     -- set player velocity based on input
     player.velocity.x = 0
     player.velocity.y = 0
@@ -69,18 +69,32 @@ function updatePlayer(player, dt)
     player.y = player.y + player.velocity.y * player.speed * dt
 end
 
-function love.load()
-    player = {
-        x = 100,
-        y = 100,
-        velocity = {x = 0, y = 0},
-        speed = 240,
-        size = 10,
-        draw = drawPlayer,
-        update = updatePlayer
-    }
+function getFirstActorWithTag(tag)
+    for i in pairs(actors) do
+        local actor = actors[i]
+        if actor.tags ~= nil then
+            for i, currentTag in ipairs(actor.tags) do
+                if currentTag == tag then
+                    return actor
+                end
+            end
+        end
+    end
+end
 
+function love.load()
     actors = {
+        {
+            -- Players
+            x = 100,
+            y = 100,
+            velocity = {x = 0, y = 0},
+            speed = 240,
+            size = 10,
+            draw = drawPlayer,
+            update = updatePlayer,
+            tags = {"player"}
+        },
         {
             -- Coin
             x = 500,
@@ -125,8 +139,6 @@ function love.load()
 end
 
 function love.update(dt)
-    player:update(dt)
-
     -- actors logic (if coin exists)
     for i in pairs(actors) do
         local coin = actors[i]
@@ -135,9 +147,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    -- draw player
-    player:draw()
-
     -- draw actors if it exists
     for i in pairs(actors) do
         local coin = actors[i]
