@@ -1,6 +1,3 @@
-local player
-local coins
-
 function calculateDistance(pointA, pointB)
     local diffx, diffy = pointA.x - pointB.x, pointA.y - pointB.y
     local distanceSquared = diffx * diffx + diffy * diffy
@@ -10,6 +7,11 @@ end
 function drawPlayer(player)
     love.graphics.setColor(1, 1, 1)
     love.graphics.circle("fill", player.x, player.y, player.size)
+end
+
+function drawCoin(coin)
+    love.graphics.setColor(1, 1, 0.5)
+    love.graphics.circle("fill", coin.x, coin.y, coin.size)
 end
 
 function updatePlayer(player, dt)
@@ -38,10 +40,8 @@ function updatePlayer(player, dt)
     player.y = player.y + player.velocity.y * player.speed * dt
 end
 
-function drawCoin(coin)
-    love.graphics.setColor(1, 1, 0.5)
-    love.graphics.circle("fill", coin.x, coin.y, coin.size)
-end
+local player
+local coins
 
 function love.load()
     player = {
@@ -83,7 +83,7 @@ function love.load()
 end
 
 function love.update(dt)
-    player.update(player, dt)
+    player:update(dt)
 
     -- coins logic (if coin exists)
     for i in pairs(coins) do
@@ -100,11 +100,11 @@ end
 
 function love.draw()
     -- draw player
-    player.draw(player)
+    player:draw()
 
     -- draw coins if it exists
     for i in pairs(coins) do
         local coin = coins[i]
-        coin.draw(coin)
+        coin:draw()
     end
 end
