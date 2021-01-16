@@ -1,6 +1,12 @@
 local player
 local coins
 
+function calculateDistance(pointA, pointB)
+    local diffx, diffy = pointA.x - pointB.x, pointA.y - pointB.y
+    local distanceSquared = diffx * diffx + diffy * diffy
+    return math.sqrt(distanceSquared)
+end
+
 function love.load()
     player = {
         x = 100,
@@ -63,12 +69,7 @@ function love.update(dt)
     for i in pairs(coins) do
         local coin = coins[i]
         if coin ~= nil then
-            -- calculate distance from player to coin
-            local diffx, diffy = coin.x - player.x, coin.y - player.y
-            local distanceSquared = diffx * diffx + diffy * diffy
-            local distance = math.sqrt(distanceSquared)
-
-            if distance < coin.size + player.size then
+            if calculateDistance(player, coin) < coin.size + player.size then
                 -- destroy coin, remove from list
                 coins[i] = nil
 
