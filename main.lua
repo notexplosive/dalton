@@ -7,35 +7,50 @@ function calculateDistance(pointA, pointB)
     return math.sqrt(distanceSquared)
 end
 
+function drawPlayer(player)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.circle("fill", player.x, player.y, player.size)
+end
+
+function drawCoin(coin)
+    love.graphics.setColor(1, 1, 0.5)
+    love.graphics.circle("fill", coin.x, coin.y, coin.size)
+end
+
 function love.load()
     player = {
         x = 100,
         y = 100,
         velocity = {x = 0, y = 0},
         speed = 240,
-        size = 10
+        size = 10,
+        draw = drawPlayer
     }
 
     coins = {
         {
             x = 500,
             y = 300,
-            size = 5
+            size = 5,
+            draw = drawCoin
         },
         {
             x = 500,
             y = 300,
-            size = 5
+            size = 5,
+            draw = drawCoin
         },
         {
             x = 100,
             y = 200,
-            size = 5
+            size = 5,
+            draw = drawCoin
         },
         {
             x = 300,
             y = 600,
-            size = 5
+            size = 5,
+            draw = drawCoin
         }
     }
 end
@@ -82,15 +97,13 @@ end
 
 function love.draw()
     -- draw player
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.circle("fill", player.x, player.y, player.size)
+    player.draw(player)
 
     -- draw coins if it exists
     for i in pairs(coins) do
         local coin = coins[i]
         if coin ~= nil then
-            love.graphics.setColor(1, 1, 0.5)
-            love.graphics.circle("fill", coin.x, coin.y, coin.size)
+            coin.draw(coin)
         end
     end
 end
