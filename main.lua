@@ -1,3 +1,7 @@
+local actors
+local enemies
+local player
+
 function calculateDistance(pointA, pointB)
     local diffx, diffy = pointA.x - pointB.x, pointA.y - pointB.y
     local distanceSquared = diffx * diffx + diffy * diffy
@@ -12,6 +16,31 @@ end
 function drawCoin(coin)
     love.graphics.setColor(1, 1, 0.5)
     love.graphics.circle("fill", coin.x, coin.y, coin.size)
+end
+
+function drawEnemy(actor)
+    love.graphics.setColor(1, 0.5, 0.5)
+    love.graphics.circle("fill", actor.x, actor.y, actor.size)
+end
+
+function updateCoin(actor, i, dt)
+    if calculateDistance(player, actor) < actor.size + player.size then
+        -- destroy actor, remove from list
+        table.remove(actors, i)
+
+        -- grow from eating a actor
+        player.size = player.size + actor.size
+    end
+end
+
+function updateEnemy(actor, i, dt)
+    if calculateDistance(player, actor) < actor.size + player.size then
+        -- destroy actor, remove from list
+        table.remove(actors, i)
+
+        -- grow from eating a actor
+        player.size = player.size - actor.size
+    end
 end
 
 function updatePlayer(player, dt)
@@ -40,9 +69,6 @@ function updatePlayer(player, dt)
     player.y = player.y + player.velocity.y * player.speed * dt
 end
 
-local player
-local coins
-
 function love.load()
     player = {
         x = 100,
@@ -54,30 +80,46 @@ function love.load()
         update = updatePlayer
     }
 
-    coins = {
+    actors = {
         {
+            -- Coin
             x = 500,
             y = 300,
             size = 5,
-            draw = drawCoin
+            draw = drawCoin,
+            update = updateCoin
         },
         {
+            -- Coin
             x = 500,
             y = 300,
             size = 5,
-            draw = drawCoin
+            draw = drawCoin,
+            update = updateCoin
         },
         {
+            -- Coin
             x = 100,
             y = 200,
             size = 5,
-            draw = drawCoin
+            draw = drawCoin,
+            update = updateCoin
         },
         {
+            -- Coin
             x = 300,
             y = 600,
             size = 5,
-            draw = drawCoin
+            draw = drawCoin,
+            update = updateCoin
+        },
+        {
+            -- Enemy
+            x = 200,
+            y = 200,
+            size = 7,
+            draw = drawEnemy,
+            update = updateEnemy
         }
     }
 end
@@ -85,16 +127,10 @@ end
 function love.update(dt)
     player:update(dt)
 
-    -- coins logic (if coin exists)
-    for i in pairs(coins) do
-        local coin = coins[i]
-        if calculateDistance(player, coin) < coin.size + player.size then
-            -- destroy coin, remove from list
-            table.remove(coins, i)
-
-            -- grow from eating a coin
-            player.size = player.size + coin.size
-        end
+    -- actors logic (if coin exists)
+    for i in pairs(actors) do
+        local coin = actors[i]
+        coin:update(i, dt)
     end
 end
 
@@ -102,9 +138,9 @@ function love.draw()
     -- draw player
     player:draw()
 
-    -- draw coins if it exists
-    for i in pairs(coins) do
-        local coin = coins[i]
+    -- draw actors if it exists
+    for i in pairs(actors) do
+        local coin = actors[i]
         coin:draw()
     end
 end
