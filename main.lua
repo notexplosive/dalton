@@ -12,6 +12,32 @@ function drawPlayer(player)
     love.graphics.circle("fill", player.x, player.y, player.size)
 end
 
+function updatePlayer(player, dt)
+    -- set player velocity based on input
+    player.velocity.x = 0
+    player.velocity.y = 0
+
+    if love.keyboard.isDown("right") then
+        player.velocity.x = player.velocity.x + 1
+    end
+
+    if love.keyboard.isDown("left") then
+        player.velocity.x = player.velocity.x - 1
+    end
+
+    if love.keyboard.isDown("up") then
+        player.velocity.y = player.velocity.y - 1
+    end
+
+    if love.keyboard.isDown("down") then
+        player.velocity.y = player.velocity.y + 1
+    end
+
+    -- move player by velocity
+    player.x = player.x + player.velocity.x * player.speed * dt
+    player.y = player.y + player.velocity.y * player.speed * dt
+end
+
 function drawCoin(coin)
     love.graphics.setColor(1, 1, 0.5)
     love.graphics.circle("fill", coin.x, coin.y, coin.size)
@@ -24,7 +50,8 @@ function love.load()
         velocity = {x = 0, y = 0},
         speed = 240,
         size = 10,
-        draw = drawPlayer
+        draw = drawPlayer,
+        update = updatePlayer
     }
 
     coins = {
@@ -56,29 +83,7 @@ function love.load()
 end
 
 function love.update(dt)
-    -- set player velocity based on input
-    player.velocity.x = 0
-    player.velocity.y = 0
-
-    if love.keyboard.isDown("right") then
-        player.velocity.x = player.velocity.x + 1
-    end
-
-    if love.keyboard.isDown("left") then
-        player.velocity.x = player.velocity.x - 1
-    end
-
-    if love.keyboard.isDown("up") then
-        player.velocity.y = player.velocity.y - 1
-    end
-
-    if love.keyboard.isDown("down") then
-        player.velocity.y = player.velocity.y + 1
-    end
-
-    -- move player by velocity
-    player.x = player.x + player.velocity.x * player.speed * dt
-    player.y = player.y + player.velocity.y * player.speed * dt
+    player.update(player, dt)
 
     -- coins logic (if coin exists)
     for i in pairs(coins) do
