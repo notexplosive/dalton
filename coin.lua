@@ -1,5 +1,7 @@
 local Coin = {}
 
+Coin.componentName = "Coin"
+
 function Coin.draw(coin)
     love.graphics.setColor(1, 1, 0.5)
     love.graphics.circle("fill", coin.x, coin.y, coin.size)

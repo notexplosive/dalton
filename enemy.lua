@@ -1,5 +1,7 @@
 local Enemy = {}
 
+Enemy.componentName = "Enemy"
+
 function Enemy.draw(actor)
     love.graphics.setColor(1, 0.5, 0.5)
     love.graphics.circle("fill", actor.x, actor.y, actor.size)

@@ -1,3 +1,13 @@
+function newObject(classType)
+    local object = {}
+
+    -- Do some lua magic so that myActor:update() calls Actor.update(myActor)
+    setmetatable(object, classType)
+    classType.__index = classType
+
+    return object
+end
+
 function calculateDistance(pointA, pointB)
     local diffx, diffy = pointA.x - pointB.x, pointA.y - pointB.y
     local distanceSquared = diffx * diffx + diffy * diffy

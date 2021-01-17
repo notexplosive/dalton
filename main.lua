@@ -5,8 +5,33 @@ local Coin = require "coin"
 local Player = require "player"
 local Enemy = require "enemy"
 
+-- example: local player = createActor({Player})
+function createActor(componentClasses)
+    local actor = {}
+
+    actor.componentTable = {}
+    actor.componentList = {}
+
+    for i, componentClass in ipairs(componentClasses) do
+        local component = newObject(componentClass)
+        component.actor = actor
+
+        component:setup()
+
+        -- so we can get actor.MyComponent
+        actor.componentTable[componentClass.componentName] = component
+
+        -- so we can call update() and draw()
+        actor.componentList[#actor.componentList + 1] = component
+    end
+
+    return actor
+end
+
 function love.load()
-    actors = {
+    actors = {}
+    actors[#actors + 1] = createActor({Player})
+    --[[
         {
             -- Players
             x = 100,
@@ -58,21 +83,25 @@ function love.load()
             draw = Enemy.draw,
             update = Enemy.update
         }
-    }
+        ]]
 end
 
 function love.update(dt)
-    -- actors logic (if coin exists)
     for i in pairs(actors) do
         local actor = actors[i]
-        actor:update(i, dt)
+        for j in pairs(actor.componentList) do
+            local component = actor.componentList[j]
+            component:update(i, dt)
+        end
     end
 end
 
 function love.draw()
-    -- draw actors if it exists
     for i in pairs(actors) do
         local actor = actors[i]
-        actor:draw()
+        for j in pairs(actor.componentList) do
+            local component = actor.componentList[j]
+            component:draw()
+        end
     end
 end

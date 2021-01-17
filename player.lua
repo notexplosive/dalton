@@ -1,34 +1,45 @@
 local Player = {}
 
-function Player.draw(player)
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.circle("fill", player.x, player.y, player.size)
+Player.componentName = "Player"
+
+function Player.setup(self)
+    self.velocity = {x = 0, y = 0}
+    self.speed = 500
+    self.x = 200
+    self.y = 200
+    self.size = 10
 end
 
-function Player.update(player, i, dt)
-    -- set player velocity based on input
-    player.velocity.x = 0
-    player.velocity.y = 0
+function Player.draw(self)
+    print(self.x, self.y)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.circle("fill", self.x, self.y, self.size)
+end
+
+function Player.update(self, i, dt)
+    -- set self velocity based on input
+    self.velocity.x = 0
+    self.velocity.y = 0
 
     if love.keyboard.isDown("right") then
-        player.velocity.x = player.velocity.x + 1
+        self.velocity.x = self.velocity.x + 1
     end
 
     if love.keyboard.isDown("left") then
-        player.velocity.x = player.velocity.x - 1
+        self.velocity.x = self.velocity.x - 1
     end
 
     if love.keyboard.isDown("up") then
-        player.velocity.y = player.velocity.y - 1
+        self.velocity.y = self.velocity.y - 1
     end
 
     if love.keyboard.isDown("down") then
-        player.velocity.y = player.velocity.y + 1
+        self.velocity.y = self.velocity.y + 1
     end
 
-    -- move player by velocity
-    player.x = player.x + player.velocity.x * player.speed * dt
-    player.y = player.y + player.velocity.y * player.speed * dt
+    -- move self by velocity
+    self.x = self.x + self.velocity.x * self.speed * dt
+    self.y = self.y + self.velocity.y * self.speed * dt
 end
 
 return Player
