@@ -5,15 +5,11 @@ Player.componentName = "Player"
 function Player.setup(self)
     self.velocity = {x = 0, y = 0}
     self.speed = 500
-    self.x = 200
-    self.y = 200
     self.size = 10
 end
 
 function Player.draw(self)
-    print(self.x, self.y)
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.circle("fill", self.x, self.y, self.size)
+    -- blank
 end
 
 function Player.update(self, i, dt)
@@ -38,8 +34,8 @@ function Player.update(self, i, dt)
     end
 
     -- move self by velocity
-    self.x = self.x + self.velocity.x * self.speed * dt
-    self.y = self.y + self.velocity.y * self.speed * dt
+    self.actor.pos.x = self.actor.pos.x + self.velocity.x * self.speed * dt
+    self.actor.pos.y = self.actor.pos.y + self.velocity.y * self.speed * dt
 end
 
 return Player

@@ -3,26 +3,30 @@ require "extra"
 
 local Coin = require "coin"
 local Player = require "player"
+local CircleRenderer = require "circle-renderer"
 local Enemy = require "enemy"
 
 -- example: local player = createActor({Player})
-function createActor(componentClasses)
+function createActor(componentClassList)
     local actor = {}
 
-    actor.componentTable = {}
+    actor.componentMap = {}
     actor.componentList = {}
 
-    for i, componentClass in ipairs(componentClasses) do
+    actor.pos = {x = 0, y = 0}
+
+    for i, componentClass in ipairs(componentClassList) do
         local component = newObject(componentClass)
         component.actor = actor
 
         component:setup()
 
         -- so we can get actor.MyComponent
-        actor.componentTable[componentClass.componentName] = component
+        actor.componentMap[componentClass.componentName] = component
 
         -- so we can call update() and draw()
         actor.componentList[#actor.componentList + 1] = component
+        print("added component", componentClass.componentName)
     end
 
     return actor
@@ -30,7 +34,8 @@ end
 
 function love.load()
     actors = {}
-    actors[#actors + 1] = createActor({Player})
+    actors[#actors + 1] = createActor({Player, CircleRenderer})
+
     --[[
         {
             -- Players
