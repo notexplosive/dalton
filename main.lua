@@ -2,7 +2,7 @@ actors = nil
 require "extra"
 
 local Coin = require "coin"
-local Player = require "player"
+local PlayerMovement = require "player-movement"
 local CircleRenderer = require "circle-renderer"
 local Enemy = require "enemy"
 
@@ -34,7 +34,7 @@ end
 
 function love.load()
     actors = {}
-    actors[#actors + 1] = createActor({Player, CircleRenderer})
+    actors[#actors + 1] = createActor({PlayerMovement, CircleRenderer})
 
     --[[
         {

@@ -1,18 +1,18 @@
-local Player = {}
+local PlayerMovement = {}
 
-Player.componentName = "Player"
+PlayerMovement.componentName = "PlayerMovement"
 
-function Player.setup(self)
+function PlayerMovement.setup(self)
     self.velocity = {x = 0, y = 0}
     self.speed = 500
     self.size = 10
 end
 
-function Player.draw(self)
+function PlayerMovement.draw(self)
     -- blank
 end
 
-function Player.update(self, i, dt)
+function PlayerMovement.update(self, i, dt)
     -- set self velocity based on input
     self.velocity.x = 0
     self.velocity.y = 0
@@ -38,4 +38,4 @@ function Player.update(self, i, dt)
     self.actor.pos.y = self.actor.pos.y + self.velocity.y * self.speed * dt
 end
 
-return Player
+return PlayerMovement
